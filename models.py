@@ -1,6 +1,9 @@
 from datetime import datetime
 from enum import Enum
+from typing import TypeAlias
 from uuid import UUID
+
+Board: TypeAlias = list[str | None]
 
 
 class Player(str, Enum):
@@ -19,7 +22,7 @@ class Game:
     def __init__(
         self,
         id: UUID,
-        board: list[str | None],
+        board: Board,
         current_player: Player,
         status: GameStatus,
         created_at: datetime,
