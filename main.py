@@ -2,11 +2,12 @@ from uuid import UUID
 
 from fastapi import FastAPI, HTTPException
 
+from config import settings
 from game_service import GameService
 from models import Game, Player
 from repository import InMemoryGameRepository
 
-app = FastAPI(title="Gato API")
+app = FastAPI(title=settings.app_name)
 service = GameService(repo=InMemoryGameRepository())
 
 
