@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 
 from models import Game, GameStatus, Player
+from repository import GameRepository
 
 _WINNING_COMBINATIONS: list[list[int]] = [
     [0, 1, 2],
@@ -16,8 +17,8 @@ _WINNING_COMBINATIONS: list[list[int]] = [
 
 
 class GameService:
-    def __init__(self) -> None:
-        self._games: dict[UUID, Game] = {}
+    def __init__(self, repo: GameRepository) -> None:
+        self._repo = repo
 
     def create_game(self) -> Game:
         game = Game(
@@ -27,19 +28,17 @@ class GameService:
             status=GameStatus.ONGOING,
             created_at=datetime.now(),
         )
-        self._games[game.id] = game
+        self._repo.save(game)
         return game
 
     def get_game(self, game_id: UUID) -> Game:
-        if game_id not in self._games:
+        game = self._repo.find_by_id(game_id)
+        if game is None:
             raise KeyError("Partida no encontrada")
-        return self._games[game_id]
+        return game
 
     def make_move(self, game_id: UUID, player: Player, position: int) -> Game:
-        if game_id not in self._games:
-            raise KeyError("Partida no encontrada")
-
-        game = self._games[game_id]
+        game = self.get_game(game_id)
 
         if game.status != GameStatus.ONGOING:
             raise ValueError("La partida ya terminó")
@@ -67,9 +66,8 @@ class GameService:
         else:
             game.current_player = Player.O if player == Player.X else Player.X
 
+        self._repo.save(game)
         return game
 
     def delete_game(self, game_id: UUID) -> None:
-        if game_id not in self._games:
-            raise KeyError("Partida no encontrada")
-        del self._games[game_id]
+        self._repo.delete(game_id)
