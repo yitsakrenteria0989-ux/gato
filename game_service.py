@@ -37,9 +37,7 @@ class GameService:
             raise KeyError("Partida no encontrada")
         return game
 
-    def make_move(self, game_id: UUID, player: Player, position: int) -> Game:
-        game = self.get_game(game_id)
-
+    def _validate_move(self, game: Game, player: Player, position: int) -> None:
         if game.status != GameStatus.ONGOING:
             raise ValueError("La partida ya terminó")
         if game.current_player != player:
@@ -49,15 +47,14 @@ class GameService:
         if game.board[position] is not None:
             raise ValueError("Esa celda ya está ocupada")
 
-        game.board[position] = player.value
-
-        winner = None
+    def _detects_winner_or_draw(self, game: Game, player: Player) -> Player | None:
         for combo in _WINNING_COMBINATIONS:
             a, b, c = combo
             if game.board[a] == game.board[b] == game.board[c] == player.value:
-                winner = player
-                break
+                return player
+        return None
 
+    def _update_game(self, game: Game, player: Player, winner: Player | None) -> None:
         if winner:
             game.status = GameStatus.X_WINS if player == Player.X else GameStatus.O_WINS
             game.winner = winner
@@ -65,6 +62,17 @@ class GameService:
             game.status = GameStatus.DRAW
         else:
             game.current_player = Player.O if player == Player.X else Player.X
+
+    def make_move(self, game_id: UUID, player: Player, position: int) -> Game:
+        game = self.get_game(game_id)
+
+        self._validate_move(game, player, position)
+
+        game.board[position] = player.value
+
+        winner = self._detects_winner_or_draw(game, player)
+
+        self._update_game(game, player, winner)
 
         self._repo.save(game)
         return game
