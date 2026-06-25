@@ -32,3 +32,18 @@ def test_non_existing_id(client):
 
     # Assert
     assert response.status_code == 404
+
+
+def test_make_move(client):
+    # Arrange — crear partida primero
+    game_id = client.post("/games").json()["id"]
+
+    # Act
+    response = client.post(
+        f"/games/{game_id}/move",
+        params={"player": "X", "position": 0},
+    )
+
+    # Assert
+    assert response.status_code == 200
+    assert response.json()["board"][0] == "X"

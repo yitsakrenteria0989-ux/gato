@@ -44,3 +44,14 @@ def test_out_of_turn_player(service, game):
     service.make_move(game.id, Player.X, position=0)
     with pytest.raises(ValueError):
         service.make_move(game.id, Player.X, position=1)
+
+
+def test_X_wins_first_row(service, game):
+    service.make_move(game.id, Player.X, position=0)
+    service.make_move(game.id, Player.O, position=3)
+    service.make_move(game.id, Player.X, position=1)
+    service.make_move(game.id, Player.O, position=5)
+    game_winner = service.make_move(game.id, Player.X, position=2)
+
+    assert game_winner.status == GameStatus.X_WINS
+    assert game_winner.winner == Player.X
