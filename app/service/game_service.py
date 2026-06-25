@@ -79,3 +79,7 @@ class GameService:
 
     def delete_game(self, game_id: UUID) -> None:
         self._repo.delete(game_id)
+
+    def list_games(self) -> list[Game]:
+        return self._repo.list_all()
+

@@ -17,3 +17,6 @@ class InMemoryGameRepository:
         if game_id not in self._games:
             raise KeyError("Partida no encontrada")
         del self._games[game_id]
+
+    def list_all(self) -> list[Game]:
+        return list(self._games.values())
