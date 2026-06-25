@@ -1,7 +1,7 @@
 from typing import Protocol
 from uuid import UUID
 
-from models import Game
+from app.domain.models import Game
 
 
 class GameRepository(Protocol):
