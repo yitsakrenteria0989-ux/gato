@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 
 from app.domain.models import Game, GameStatus, Player
-from app.repository.memory import GameRepository
+from app.repository.base import GameRepository
 
 _WINNING_COMBINATIONS: list[list[int]] = [
     [0, 1, 2],
