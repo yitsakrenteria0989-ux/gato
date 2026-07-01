@@ -1,29 +1,66 @@
 # Gato API
 
-API REST del juego Gato (Tic Tac Toe) construida con FastAPI.
+API REST del juego Gato (Tic Tac Toe) 
+Construida con FastAPI.
+Hecha para jugar partidas de dos jugadores
 
-## Tablero
+## Requisitos
 
-```
-0 | 1 | 2
----------
-3 | 4 | 5
----------
-6 | 7 | 8
-```
+- Python 3.11+
+- [uv](https://docs.astral.sh/uv/) — gestor de dependencias
 
-## Endpoints
-
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| POST | `/games` | Crear nueva partida |
-| GET | `/games/{id}` | Ver estado actual |
-| POST | `/games/{id}/move` | Hacer un movimiento |
-| DELETE | `/games/{id}` | Abandonar partida |
-
-## Correr en local
+## Instalación
 
 ```bash
-pip install -r requirements.txt
-uvicorn main:app --reload
+git clone <url-del-repo>
+cd gato
+uv sync --extra dev
+uvicorn app.api.routes:app --reload
 ```
+
+## Uso
+
+### Crear una partida
+Comando para generar una partida que se guarda de forma local
+```bash
+curl -X POST http://localhost:8000/games
+```
+
+### Ver estatus de una partida
+Comando para observar el estatus de una partida generada, ej. ONGOING, X_WINS
+```bash
+curl http://localhost:8000/games/{id}
+```
+
+### Hacer un movimiento
+Comando para realizar un movimiento en el tablero para el jugador en turno. 
+
+Tablero
+
+0|1|2
+3|4|5
+6|7|8
+```bash
+curl -X POST "http://localhost:8000/games/{id}/move?player=X&position=0"
+```
+
+### Borrar una partida
+Comando para borrar una partida en la memoria de la API
+```bash
+curl -X DELETE http://localhost:8000/games/{id}
+```
+
+## Desarrollo
+
+### Correr tests
+```bash
+python -m pytest
+```
+
+### Verificar estilo
+```bash
+python -m ruff check .
+python -m black --check .
+```
+
+
