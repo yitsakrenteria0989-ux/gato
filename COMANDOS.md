@@ -51,7 +51,7 @@ uvicorn main:app --reload               # correr servidor con recarga automátic
 uvicorn app.api.routes:app --reload     # correr desde ruta específica
 ```
 
-## Git
+## Git — básico
 
 ```bash
 git init                                # inicializar repositorio
@@ -60,6 +60,28 @@ git add .                               # agregar todos los cambios al staging
 git add archivo.py                      # agregar un archivo específico
 git commit -m "mensaje"                 # hacer commit
 git log --oneline                       # ver historial resumido
+git log --oneline -5                    # ver últimos 5 commits
+```
+
+## Git — ramas
+
+```bash
+git branch                              # ver ramas existentes
+git checkout -b nombre-rama             # crear y cambiar a nueva rama
+git checkout main                       # volver a main/master
+git merge nombre-rama                   # mergear rama en la rama actual
+git branch -d nombre-rama              # eliminar rama ya mergeada
+git rebase main                         # rebasar la rama actual sobre main
+```
+
+## Git — stash
+
+```bash
+git stash                               # guardar cambios sin commitear
+git stash list                          # ver stashes guardados
+git stash pop                           # recuperar el último stash
+git stash drop                          # descartar el último stash
+git checkout -- .                       # descartar todos los cambios no commiteados
 ```
 
 ## Python
