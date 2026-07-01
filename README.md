@@ -1,8 +1,8 @@
 # Gato API
 
-API REST del juego Gato (Tic Tac Toe) 
-Construida con FastAPI.
-Hecha para jugar partidas de dos jugadores
+API REST del juego Gato (Tic Tac Toe) construida con FastAPI.
+Permite jugar partidas de dos jugadores vía HTTP.
+
 
 ## Requisitos
 
@@ -33,13 +33,15 @@ curl http://localhost:8000/games/{id}
 ```
 
 ### Hacer un movimiento
-Comando para realizar un movimiento en el tablero para el jugador en turno. 
+Comando para realizar un movimiento en el tablero para el jugador en turno.
 
-Tablero
-
-0|1|2
-3|4|5
-6|7|8
+```
+0 | 1 | 2
+---------
+3 | 4 | 5
+---------
+6 | 7 | 8
+```
 ```bash
 curl -X POST "http://localhost:8000/games/{id}/move?player=X&position=0"
 ```
