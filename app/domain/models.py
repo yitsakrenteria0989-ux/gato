@@ -27,3 +27,14 @@ class Game(BaseModel):
     status: GameStatus
     created_at: datetime
     winner: Player | None = None
+
+
+class MoveRequest(BaseModel):
+    player: Player
+    position: int
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {"player": "X", "position": 0}
+        }
+    }

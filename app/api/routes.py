@@ -3,11 +3,15 @@ from uuid import UUID
 from fastapi import Depends, FastAPI, HTTPException
 
 from app.config import settings
-from app.domain.models import Game, Player
+from app.domain.models import Game, MoveRequest
 from app.repository.memory import InMemoryGameRepository
 from app.service.game_service import GameService
 
-app = FastAPI(title=settings.app_name)
+app = FastAPI(
+    title=settings.app_name,
+    version=settings.app_version,
+    description="API REST para jugar partidas de Gato (Tic Tac Toe) vía HTTP.",
+)
 
 
 def get_service() -> GameService:
@@ -44,12 +48,11 @@ def get_game(
 @app.post("/games/{game_id}/move")
 def make_move(
     game_id: UUID,
-    player: Player,
-    position: int,
+    body: MoveRequest,
     service: GameService = Depends(get_service_singleton),
 ) -> Game:
     try:
-        return service.make_move(game_id, player, position)
+        return service.make_move(game_id, body.player, body.position)
     except KeyError:
         raise HTTPException(status_code=404, detail="Partida no encontrada")
     except ValueError as e:

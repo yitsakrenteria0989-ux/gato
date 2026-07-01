@@ -25,7 +25,7 @@ def test_make_move(client):
 
     response = client.post(
         f"/games/{game_id}/move",
-        params={"player": "X", "position": 0},
+        json={"player": "X", "position": 0},
     )
 
     assert response.status_code == 200
