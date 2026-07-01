@@ -67,3 +67,22 @@ def delete_game(
         service.delete_game(game_id)
     except KeyError:
         raise HTTPException(status_code=404, detail="Partida no encontrada")
+
+
+@app.get("/games/{game_id}/board")
+def get_board(
+    game_id: UUID, service: GameService = Depends(get_service_singleton)
+) -> dict:
+    try:
+        game = service.get_game(game_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Partida no encontrada")
+
+    b = game.board
+    display = (
+        f"{b[0] or '·'} | {b[1] or '·'} | {b[2] or '·'}\n"
+        f"{b[3] or '·'} | {b[4] or '·'} | {b[5] or '·'}\n"
+        f"{b[6] or '·'} | {b[7] or '·'} | {b[8] or '·'}"
+    )
+    return {"board": display}
+
