@@ -21,6 +21,7 @@ class GameService:
         self._repo = repo
 
     def create_game(self) -> Game:
+        """Crea una partida. Siempre inicia Player.X"""
         game = Game(
             id=uuid4(),
             board=[None] * 9,
@@ -32,6 +33,17 @@ class GameService:
         return game
 
     def get_game(self, game_id: UUID) -> Game:
+        """Recupera un juego en base a su id
+
+        Args:
+            game_id: id de la partida creada anteriormente
+
+        Returns:
+            Partida asociada al id
+
+        Raises:
+            KeyError: No existe partida con ese id
+        """
         game = self._repo.find_by_id(game_id)
         if game is None:
             raise KeyError("Partida no encontrada")
@@ -64,6 +76,22 @@ class GameService:
             game.current_player = Player.O if player == Player.X else Player.X
 
     def make_move(self, game_id: UUID, player: Player, position: int) -> Game:
+        """Aplica un movimiento en una partida en curso
+        El tablero utiliza indices del 0-8, de izquierda a derecha y arriba hacía abajo
+        El turno inicial siempre es de Player.X
+
+        Args:
+            game_id: id de la partida
+            player: jugador que hace el movimiento
+            position: indice del tablero dónde se hará el movimiento
+
+        Returns:
+            El juego con el movimiento realizado
+
+        Raises:
+            KeyError: No existe partida con ese id
+            ValueError: Se realiza un movimiento que viola las reglas
+        """
         game = self.get_game(game_id)
 
         self._validate_move(game, player, position)
@@ -78,8 +106,17 @@ class GameService:
         return game
 
     def delete_game(self, game_id: UUID) -> None:
+        """Borra una partida del repositorio
+
+        Args:
+            game_id: id de la partida a borrar
+
+        Raises:
+            KeyError: No hay partida con ese id
+        """
         self._repo.delete(game_id)
 
     def list_games(self) -> list[Game]:
+        """Retorna una lista de todos los juegos creados"""
         return self._repo.list_all()
 
