@@ -2,9 +2,10 @@ from uuid import UUID
 
 from fastapi import Depends, FastAPI, HTTPException
 
+from app.api.dependencies import get_service_singleton
+from app.api.stats import router as stats_router
 from app.config import settings
 from app.domain.models import Game, MoveRequest
-from app.repository.memory import InMemoryGameRepository
 from app.service.game_service import GameService
 
 app = FastAPI(
@@ -13,16 +14,7 @@ app = FastAPI(
     description="API REST para jugar partidas de Gato (Tic Tac Toe) vía HTTP.",
 )
 
-
-def get_service() -> GameService:
-    return GameService(repo=InMemoryGameRepository())
-
-
-_service = get_service()
-
-
-def get_service_singleton() -> GameService:
-    return _service
+app.include_router(stats_router)
 
 
 @app.post("/games")
@@ -85,4 +77,3 @@ def get_board(
         f"{b[6] or '·'} | {b[7] or '·'} | {b[8] or '·'}"
     )
     return {"board": display}
-

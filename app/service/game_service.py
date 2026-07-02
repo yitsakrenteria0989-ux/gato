@@ -119,4 +119,3 @@ class GameService:
     def list_games(self) -> list[Game]:
         """Retorna una lista de todos los juegos creados"""
         return self._repo.list_all()
-

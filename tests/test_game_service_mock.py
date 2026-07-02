@@ -21,7 +21,7 @@ def test_create_game_llama_save():
 def test_get_game_cuando_repo_devuelve_none():
     # Arrange
     repo = MagicMock()
-    repo.find_by_id.return_value = None   # ← controlas el retorno
+    repo.find_by_id.return_value = None  # ← controlas el retorno
     service = GameService(repo=repo)
 
     # Act + Assert

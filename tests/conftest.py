@@ -1,7 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.api.routes import app, get_service_singleton
+from app.api.dependencies import get_service_singleton
+from app.api.routes import app
 from app.repository.memory import InMemoryGameRepository
 from app.service.game_service import GameService
 

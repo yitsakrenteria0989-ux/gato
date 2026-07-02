@@ -40,3 +40,16 @@ def test_list_games(client):
 
     assert response.status_code == 200
     assert len(response.json()) == 2
+
+
+def test_get_stats(client):
+    client.post("/games")
+    client.post("/games")
+    client.post("/games")
+
+    response = client.get("/stats")
+
+    data = response.json()
+    assert response.status_code == 200
+    assert data["total"] == 3
+    assert data["ongoing"] == 3

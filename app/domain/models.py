@@ -33,8 +33,4 @@ class MoveRequest(BaseModel):
     player: Player
     position: int
 
-    model_config = {
-        "json_schema_extra": {
-            "example": {"player": "X", "position": 0}
-        }
-    }
+    model_config = {"json_schema_extra": {"example": {"player": "X", "position": 0}}}
