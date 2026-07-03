@@ -92,6 +92,16 @@ pre-commit run --all-files  # correr todos los hooks manualmente
 pre-commit run ruff         # correr solo un hook específico
 ```
 
+## GitHub / remoto
+
+```bash
+git remote add origin URL           # conectar repo local con GitHub
+git remote set-url origin URL       # cambiar la URL del remote
+git push -u origin master           # primer push (configura tracking)
+git push                            # push subsiguientes
+git pull                            # traer cambios del remoto
+```
+
 ## Python
 
 ```bash
