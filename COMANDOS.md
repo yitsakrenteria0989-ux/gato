@@ -84,6 +84,14 @@ git stash drop                          # descartar el último stash
 git checkout -- .                       # descartar todos los cambios no commiteados
 ```
 
+## pre-commit
+
+```bash
+pre-commit install          # activar hooks en el repo local (una sola vez)
+pre-commit run --all-files  # correr todos los hooks manualmente
+pre-commit run ruff         # correr solo un hook específico
+```
+
 ## Python
 
 ```bash
