@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.api.routes import get_service_singleton
+from app.api.dependencies import get_service_singleton
 from app.domain.models import GameStatus
 from app.service.game_service import GameService
 
