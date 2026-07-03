@@ -102,6 +102,26 @@ git push                            # push subsiguientes
 git pull                            # traer cambios del remoto
 ```
 
+## Docker
+
+```bash
+docker build -t gato .              # construir imagen
+docker run -p 8000:8000 gato        # correr contenedor
+docker ps                           # ver contenedores activos
+docker stop <id>                    # detener contenedor
+docker images                       # ver imágenes locales
+docker rmi gato                     # eliminar imagen
+```
+
+## Docker Compose
+
+```bash
+docker compose up                   # levantar servicios
+docker compose up --build           # levantar reconstruyendo la imagen
+docker compose down                 # detener y eliminar contenedores
+docker compose logs -f              # ver logs en tiempo real
+```
+
 ## Python
 
 ```bash
