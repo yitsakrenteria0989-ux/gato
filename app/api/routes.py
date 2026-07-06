@@ -17,6 +17,11 @@ app = FastAPI(
 app.include_router(stats_router)
 
 
+@app.get("/health")
+def health_check() -> dict:
+    return {"status": "ok", "version": settings.app_version}
+
+
 @app.post("/games")
 def create_game(service: GameService = Depends(get_service_singleton)) -> Game:
     return service.create_game()

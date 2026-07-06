@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 
 from app.domain.models import Game, GameStatus, Player
+from app.logger import get_logger
 from app.repository.base import GameRepository
 
 _WINNING_COMBINATIONS: list[list[int]] = [
@@ -14,6 +15,8 @@ _WINNING_COMBINATIONS: list[list[int]] = [
     [0, 4, 8],
     [2, 4, 6],
 ]
+
+logger = get_logger(__name__)
 
 
 class GameService:
@@ -30,6 +33,7 @@ class GameService:
             created_at=datetime.now(),
         )
         self._repo.save(game)
+        logger.info("Partida creada: %s", game.id)
         return game
 
     def get_game(self, game_id: UUID) -> Game:
@@ -103,6 +107,13 @@ class GameService:
         self._update_game(game, player, winner)
 
         self._repo.save(game)
+        logger.info(
+            "Movimiento en partida %s: jugador %s en posición %s → estado %s",
+            game_id,
+            player.value,
+            position,
+            game.status,
+        )
         return game
 
     def delete_game(self, game_id: UUID) -> None:
