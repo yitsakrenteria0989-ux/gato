@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gato API</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 24px;
+    }
+
+    h1 { font-size: 2rem; letter-spacing: 2px; }
+
+    #status {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      min-height: 28px;
+    }
+
+    #status.winner { color: #4ade80; font-weight: bold; }
+    #status.draw   { color: #facc15; font-weight: bold; }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 8px;
+    }
+
+    .cell {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      font-size: 2.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .cell:hover:not(.taken) { background: #2d3f55; }
+    .cell.taken { cursor: default; }
+    .cell.x { color: #60a5fa; }
+    .cell.o { color: #f87171; }
+
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover { background: #2563eb; }
+    button:disabled { background: #475569; cursor: default; }
+  </style>
+</head>
+<body>
+  <h1>⬜ Gato</h1>
+  <div id="status">Crea una partida para empezar</div>
+  <div id="board"></div>
+  <button id="btn" onclick="newGame()">Nueva partida</button>
+
+  <script>
+    const API = '';
+    let gameId = null;
+    let currentPlayer = 'X';
+    let gameOver = false;
+
+    async function newGame() {
+      const res = await fetch(`${API}/games`, { method: 'POST' });
+      const game = await res.json();
+      gameId = game.id;
+      currentPlayer = game.current_player;
+      gameOver = false;
+      renderBoard(game.board);
+      setStatus(`Turno de ${currentPlayer}`);
+    }
+
+    async function makeMove(position) {
+      if (!gameId || gameOver) return;
+      const res = await fetch(`${API}/games/${gameId}/move`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player: currentPlayer, position }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        setStatus(err.detail, '');
+        return;
+      }
+
+      const game = await res.json();
+      currentPlayer = game.current_player;
+      renderBoard(game.board);
+
+      if (game.status === 'x_wins') {
+        setStatus('¡Ganó X!', 'winner'); gameOver = true;
+      } else if (game.status === 'o_wins') {
+        setStatus('¡Ganó O!', 'winner'); gameOver = true;
+      } else if (game.status === 'draw') {
+        setStatus('¡Empate!', 'draw'); gameOver = true;
+      } else {
+        setStatus(`Turno de ${game.current_player}`);
+      }
+    }
+
+    function renderBoard(board) {
+      const el = document.getElementById('board');
+      el.innerHTML = board.map((cell, i) => `
+        <div
+          class="cell ${cell ? 'taken ' + cell.toLowerCase() : ''}"
+          onclick="makeMove(${i})"
+        >${cell ?? ''}</div>
+      `).join('');
+    }
+
+    function setStatus(text, cls = '') {
+      const el = document.getElementById('status');
+      el.textContent = text;
+      el.className = cls;
+    }
+  </script>
+</body>
+</html>

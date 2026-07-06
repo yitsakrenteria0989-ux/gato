@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 
 from app.api.dependencies import get_service_singleton
 from app.api.stats import router as stats_router
@@ -14,6 +15,7 @@ app = FastAPI(
     description="API REST para jugar partidas de Gato (Tic Tac Toe) vía HTTP.",
 )
 
+app.mount("/ui", StaticFiles(directory="static", html=True), name="static")
 app.include_router(stats_router)
 
 
