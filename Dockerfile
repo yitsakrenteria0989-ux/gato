@@ -13,10 +13,10 @@ FROM python:3.12-slim AS runtime
 
 WORKDIR /app
 
-COPY --from=builder /root/.local /root/.local
+COPY --from=builder /app/.venv /app/.venv
 COPY . .
 
-ENV PATH="/root/.local/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
