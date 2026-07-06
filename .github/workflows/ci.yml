@@ -33,3 +33,13 @@ jobs:
 
       - name: Run tests with coverage
         run: uv run python -m pytest --cov=app --cov-fail-under=85
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    steps:
+      - name: Deploy to Render
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
