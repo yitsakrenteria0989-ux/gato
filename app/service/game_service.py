@@ -108,7 +108,7 @@ class GameService:
 
         self._repo.save(game)
         logger.info(
-            "Movimiento en partida %s: jugador %s en posición %s → estado %s",
+            "Movimiento en partida %s: jugador %s en posicion %s -> estado %s",
             game_id,
             player.value,
             position,

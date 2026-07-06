@@ -53,3 +53,44 @@ def test_get_stats(client):
     assert response.status_code == 200
     assert data["total"] == 3
     assert data["ongoing"] == 3
+
+
+def test_stats_o_wins(client):
+    game_id = client.post("/games").json()["id"]
+    for player, position in [
+        ("X", 0),
+        ("O", 3),
+        ("X", 1),
+        ("O", 4),
+        ("X", 7),
+        ("O", 5),
+    ]:
+        client.post(
+            f"/games/{game_id}/move", json={"player": player, "position": position}
+        )
+
+    data = client.get("/stats").json()
+    assert data["o_wins"] == 1
+    assert data["ongoing"] == 0
+
+
+def test_stats_draw(client):
+    game_id = client.post("/games").json()["id"]
+    for player, position in [
+        ("X", 0),
+        ("O", 4),
+        ("X", 1),
+        ("O", 3),
+        ("X", 5),
+        ("O", 2),
+        ("X", 6),
+        ("O", 8),
+        ("X", 7),
+    ]:
+        client.post(
+            f"/games/{game_id}/move", json={"player": player, "position": position}
+        )
+
+    data = client.get("/stats").json()
+    assert data["draws"] == 1
+    assert data["ongoing"] == 0

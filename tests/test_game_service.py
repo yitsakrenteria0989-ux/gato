@@ -46,6 +46,14 @@ def test_out_of_turn_player(service, game):
         service.make_move(game.id, Player.X, position=1)
 
 
+def test_delete_nonexistent_game_raises_error(service):
+    from app.repository.memory import InMemoryGameRepository
+
+    repo = InMemoryGameRepository()
+    with pytest.raises(KeyError):
+        repo.delete(uuid4())
+
+
 def test_x_wins_first_row(service, game):
     service.make_move(game.id, Player.X, position=0)
     service.make_move(game.id, Player.O, position=3)
